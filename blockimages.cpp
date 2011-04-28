@@ -278,12 +278,12 @@ struct TopFaceIterator
 		end = false;
 		x = xstart + 1;
 		y = ystart;
-		pos = 1;
+		pos = 0;
 	}
 
 	void advance()
 	{
-		//printf("%d, %d\n", x, y);
+		pos++;
 		if(pos % (size * 2) == 0)
 		{
 			x += size + 1;
@@ -300,10 +300,8 @@ struct TopFaceIterator
 			if(pos % 2 == 0)
 				y++;
 		}
-		pos++;
 		if (pos >= size*size)
 			end = true;
-		//printf("%d, %d\n", x, y);
 	}
 };
 
@@ -608,11 +606,7 @@ void drawStairsS(RGBAImage& dest, const ImageRect& drect, const RGBAImage& tiles
 	TopFaceIterator tdstit(drect.x + 2*B-1, drect.y, tilesize);
 	for (FaceIterator srcit((tile%16)*tilesize, (tile/16)*tilesize, 0, tilesize); !srcit.end; srcit.advance(), tdstit.advance())
 	{
-		// if B is odd, we need B pixels from each column, but if it's even, we need to alternate between
-		//  B-1 and B+1
 		int cutoff = B;
-		if (B % 2 == 0)
-			cutoff += ((tdstit.pos / tilesize) % 2 == 0) ? -1 : 1;
 		if (tdstit.pos % tilesize < cutoff)
 		{
 			dest(tdstit.x, tdstit.y) = tiles(srcit.x, srcit.y);
@@ -636,10 +630,7 @@ void drawStairsS(RGBAImage& dest, const ImageRect& drect, const RGBAImage& tiles
 	tdstit = TopFaceIterator(drect.x + 2*B-1, drect.y + B, tilesize);
 	for (FaceIterator srcit((tile%16)*tilesize, (tile/16)*tilesize, 0, tilesize); !srcit.end; srcit.advance(), tdstit.advance())
 	{
-		// again, if B is odd, take B pixels from each column; if even, take B-1 or B+1
 		int cutoff = B;
-		if (B % 2 == 0)
-			cutoff += ((tdstit.pos / tilesize) % 2 == 0) ? -1 : 1;
 		if (tdstit.pos % tilesize >= cutoff)
 		{
 			dest(tdstit.x, tdstit.y) = tiles(srcit.x, srcit.y);
@@ -655,11 +646,7 @@ void drawStairsN(RGBAImage& dest, const ImageRect& drect, const RGBAImage& tiles
 	TopFaceIterator tdstit(drect.x + 2*B-1, drect.y + B, tilesize);
 	for (FaceIterator srcit((tile%16)*tilesize, (tile/16)*tilesize, 0, tilesize); !srcit.end; srcit.advance(), tdstit.advance())
 	{
-		// if B is odd, we need B pixels from each column, but if it's even, we need to alternate between
-		//  B-1 and B+1
 		int cutoff = B;
-		if (B % 2 == 0)
-			cutoff += ((tdstit.pos / tilesize) % 2 == 0) ? -1 : 1;
 		if (tdstit.pos % tilesize < cutoff)
 		{
 			dest(tdstit.x, tdstit.y) = tiles(srcit.x, srcit.y);
@@ -669,10 +656,7 @@ void drawStairsN(RGBAImage& dest, const ImageRect& drect, const RGBAImage& tiles
 	tdstit = TopFaceIterator(drect.x + 2*B-1, drect.y, tilesize);
 	for (FaceIterator srcit((tile%16)*tilesize, (tile/16)*tilesize, 0, tilesize); !srcit.end; srcit.advance(), tdstit.advance())
 	{
-		// again, if B is odd, take B pixels from each column; if even, take B-1 or B+1
 		int cutoff = B;
-		if (B % 2 == 0)
-			cutoff += ((tdstit.pos / tilesize) % 2 == 0) ? -1 : 1;
 		if (tdstit.pos % tilesize >= cutoff)
 		{
 			dest(tdstit.x, tdstit.y) = tiles(srcit.x, srcit.y);
