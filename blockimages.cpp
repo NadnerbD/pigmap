@@ -276,52 +276,34 @@ struct TopFaceIterator
 	{
 		size = sz;
 		end = false;
-		x = xstart;
+		x = xstart + 1;
 		y = ystart;
-		pos = 0;
+		pos = 1;
 	}
 
 	void advance()
 	{
-		if ((pos/size) % 2 == 0)
+		//printf("%d, %d\n", x, y);
+		if(pos % (size * 2) == 0)
 		{
-			int m = pos % size;
-			if (m == size - 1)
-			{
-				x += size - 1;
-				y -= size/2;
-			}
-			else if (m == size - 2)
-				y++;
-			else if (m % 2 == 0)
-			{
-				x--;
-				y++;
-			}
-			else
-				x--;
+			x += size + 1;
+			y -= size / 2 - 1;
+		}
+		else if(pos % size == 0)
+		{
+			x += size - 1;
+			y -= size / 2 - 2;
 		}
 		else
 		{
-			int m = pos % size;
-			if (m == 0)
+			x--;
+			if(pos % 2 == 0)
 				y++;
-			else if (m == size - 1)
-			{
-				x += size - 1;
-				y -= size/2 - 1;
-			}
-			else if (m % 2 == 0)
-			{
-				x--;
-				y++;
-			}
-			else
-				x--;
 		}
 		pos++;
 		if (pos >= size*size)
 			end = true;
+		//printf("%d, %d\n", x, y);
 	}
 };
 

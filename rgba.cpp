@@ -297,12 +297,12 @@ void resize(const RGBAImage& source, const ImageRect& srect, RGBAImage& dest, co
 {
 	for (int y = drect.y; y < drect.y + drect.h; y++)
 	{
-		float ypct = (float)(y - drect.y) / (float)(drect.h - 1);
-		int yoff = (int)(ypct * (float)(srect.h - 1));
+		float ypct = (float)(y - drect.y) / (float)(drect.h);
+		int yoff = (int)(ypct * (float)(srect.h));
 		for (int x = drect.x; x < drect.x + drect.w; x++)
 		{
-			float xpct = (float)(x - drect.x) / (float)(drect.w - 1);
-			int xoff = (int)(xpct * (float)(srect.w - 1));
+			float xpct = (float)(x - drect.x) / (float)(drect.w);
+			int xoff = (int)(xpct * (float)(srect.w));
 			dest(x, y) = source(srect.x + xoff, srect.y + yoff);
 		}
 	}

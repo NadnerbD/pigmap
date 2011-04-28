@@ -58,12 +58,12 @@
 //  their columns onto the faces of the block image thusly (example is for B = 3 again):
 //
 //                                     a                    f
-// abcdef              ab              abc                def
-// abcdef            aabbcd            abcde            bcdef
-// abcdef  --->    aabbccddef    or    abcdef    or    abcdef
-// abcdef          abccddeeff          abcdef          abcdef
-// abcdef            cdeeff            abcdef          abcdef
-// abcdef              ef               bcdef          abcde
+// abcdef              aa              abc                def
+// abcdef            aabbcc            abcde            bcdef
+// abcdef  --->    aabbccddee    or    abcdef    or    abcdef
+// abcdef          bbccddeeff          abcdef          abcdef
+// abcdef            ddeeff            abcdef          abcdef
+// abcdef              ff               bcdef          abcde
 //                                        def          abc
 //                                          f          a
 
