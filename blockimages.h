@@ -114,7 +114,7 @@ struct BlockImages
 	bool construct(int B, const std::string& terrainfile, const std::string& firefile);
 };
 
-#define NUMBLOCKIMAGES 281
+#define NUMBLOCKIMAGES 323
 
 // block image offsets:
 //
@@ -209,7 +209,51 @@ struct BlockImages
 // 278 trapdoor open E
 // 279 trapdoor open S
 // 280 trapdoor open N
+// 281 stone brick
+// 282 stone brick slab
+// 283 brick slab
+// 284 stone brick stairs asc E
+// 285 stone brick stairs asc W
+// 286 stone brick stairs asc N
+// 287 stone brick stairs asc S
+// 288 brick stairs asc E
+// 289 brick stairs asc W
+// 290 brick stairs asc N
+// 291 brick stairs asc S
+// 292 melon
+// 293 glass pane facing E
+// 294 glass pane facing W
+// 295 glass pane facing N
+// 296 glass pane facing S
+// 297 pumpkin stem straight
+// 298 pumpkin stem bent E
+// 299 pumpkin stem bent W
+// 300 pumpkin stem bent N
+// 301 pumpkin stem bent S
+// 302 melon stem straight
+// 303 melon stem bent E
+// 304 melon stem bent W
+// 305 melon stem bent N
+// 306 melon stem bent S
 
+// 307 huge red mushroom head
+// 308 huge red mushroom stalk
+// 309 huge brown mushroom head
+// 310 huge brown mushroom stalk
 
+// 311 vines facing E 
+// 312 vines facing W
+// 313 vines facing N
+// 314 vines facing S
+
+// 315 fence gate facing E
+// 316 fence gate facing W
+// 317 fence gate facing N
+// 318 fence gate facing S
+
+// 319 iron bars facing E
+// 320 iron bars facing W
+// 321 iron bars facing N
+// 322 iron bars facing S
 
 #endif // BLOCKIMAGES_H
