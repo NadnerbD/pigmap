@@ -1617,6 +1617,7 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawBlockImage(img, getRect(224), tiles, 46, 45, 62, B);  // dispenser N
 	drawBlockImage(img, getRect(225), tiles, 45, 45, 62, B);  // dispenser E/S
 	drawBlockImage(img, getRect(226), tiles, 192, 192, 176, B);  // sandstone
+	drawBlockImage(img, getRect(227), tiles, 74, 74, 74, B);  // note block
 
 
 	drawPartialBlockImage(img, getRect(9), tiles, 205, 205, 205, B, 0.125, 0, 0);  // water level 7
