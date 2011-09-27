@@ -1117,7 +1117,7 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(44, 1)] = 229;
 	blockOffsets[offsetIdx(44, 2)] = 230;
 	blockOffsets[offsetIdx(44, 3)] = 231;
-	blockOffsets[offsetIdx(44, 4)] = 284; // brick slab
+	blockOffsets[offsetIdx(44, 4)] = 283; // brick slab
 	blockOffsets[offsetIdx(44, 5)] = 282; // stone brick slab
 	setOffsetsForID(45, 38, *this);
 	setOffsetsForID(46, 39, *this);
