@@ -1310,10 +1310,16 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(96, 6)] = 279;
 	blockOffsets[offsetIdx(96, 7)] = 280;
 
-	setOffsetsForID(98, 281, *this); // Stone brick
-//	blockOffsets[offsetIdx(98, 1)] = 281; // mossy
-//	blockOffsets[offsetIdx(98, 2)] = 281; // cracked
+	setOffsetsForID(97, 325, *this); // hidden silverfish - default is stone
+	blockOffsets[offsetIdx(97, 1)] = 326; // cobble
+	blockOffsets[offsetIdx(97, 2)] = 327; // stone brick
 
+	setOffsetsForID(98, 281, *this); // Stone brick
+	blockOffsets[offsetIdx(98, 1)] = 323; // mossy
+	blockOffsets[offsetIdx(98, 2)] = 324; // cracked
+
+// Note: the mushroom stuff only draws two types of blocks for each mushroom type: stalk and top. 
+// There are actually multiple combinations of face textures for head blocks, hence the multiple offsets.
 	setOffsetsForID(99, 310, *this); // huge brown mushroom
 	blockOffsets[offsetIdx(99, 1)] = 309;
 	blockOffsets[offsetIdx(99, 2)] = 309;
@@ -1366,6 +1372,7 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(109, 3)] = 285;
 	blockOffsets[offsetIdx(109, 4)] = 286;
 	blockOffsets[offsetIdx(109, 5)] = 287;
+
 }
 
 void BlockImages::checkOpacityAndTransparency(int B)
@@ -1801,7 +1808,15 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 
 	drawFire(img, getRect(189), firetile, B);  // fire
 
+
+	drawBlockImage(img, getRect(325), tiles, 1, 1, 1, B);  // hidden silverfish - stone
+	drawBlockImage(img, getRect(326), tiles, 16, 16, 16, B);  // hidden silverfish - cobble
+	drawBlockImage(img, getRect(327), tiles, 54, 54, 54, B);  // hidden silverfish - stone brick
+
 	drawBlockImage(img, getRect(281), tiles, 54, 54, 54, B);  // stone brick
+	drawBlockImage(img, getRect(323), tiles, 100, 54, 54, B);  // mossy stone brick
+	drawBlockImage(img, getRect(324), tiles, 101, 54, 54, B);  // cracked stone brick
+
 	drawBlockImage(img, getRect(292), tiles, 136, 136, 137, B);  // melon block
 
 	drawBlockImage(img, getRect(307), tiles, 125, 125, 125, B);  // big red mushroom head

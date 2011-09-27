@@ -114,7 +114,7 @@ struct BlockImages
 	bool construct(int B, const std::string& terrainfile, const std::string& firefile);
 };
 
-#define NUMBLOCKIMAGES 323
+#define NUMBLOCKIMAGES 327
 
 // block image offsets:
 //
@@ -255,5 +255,13 @@ struct BlockImages
 // 320 iron bars facing W
 // 321 iron bars facing N
 // 322 iron bars facing S
+
+// 323 mossy stone brick
+// 324 cracked stone brick
+// 325 hidden silverfish - stone
+// 326 hidden silverfish - cobblestone
+// 327 hidden silverfish - stone brick
+
+
 
 #endif // BLOCKIMAGES_H
