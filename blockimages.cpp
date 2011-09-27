@@ -1832,7 +1832,7 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawStairsN(img, getRect(286), tiles, 54, B);  // stone brick stairs asc N
 	drawStairsS(img, getRect(287), tiles, 54, B);  // stone brick stairs asc S
 
-	drawStairsW(img, getRect(288), tiles, 7, B);  // brick stairs asc E
+	drawStairsE(img, getRect(288), tiles, 7, B);  // brick stairs asc E
 	drawStairsW(img, getRect(289), tiles, 7, B);  // brick stairs asc W
 	drawStairsN(img, getRect(290), tiles, 7, B);  // brick stairs asc N
 	drawStairsS(img, getRect(291), tiles, 7, B);  // brick stairs asc S
