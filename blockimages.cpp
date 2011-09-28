@@ -1365,13 +1365,13 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(107, 2)] = 317;
 	blockOffsets[offsetIdx(107, 3)] = 318;
 	setOffsetsForID(108, 288, *this); // brick stairs
-	blockOffsets[offsetIdx(108, 3)] = 289;
-	blockOffsets[offsetIdx(108, 4)] = 290;
-	blockOffsets[offsetIdx(108, 5)] = 291;
+	blockOffsets[offsetIdx(108, 1)] = 289;
+	blockOffsets[offsetIdx(108, 2)] = 290;
+	blockOffsets[offsetIdx(108, 3)] = 291;
 	setOffsetsForID(109, 284, *this); // stone brick stairs
-	blockOffsets[offsetIdx(109, 3)] = 285;
-	blockOffsets[offsetIdx(109, 4)] = 286;
-	blockOffsets[offsetIdx(109, 5)] = 287;
+	blockOffsets[offsetIdx(109, 1)] = 285;
+	blockOffsets[offsetIdx(109, 2)] = 286;
+	blockOffsets[offsetIdx(109, 3)] = 287;
 
 }
 
@@ -1827,15 +1827,15 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawPartialBlockImage(img, getRect(283), tiles, 7, 7, 7, B, 0.5, 0, 0);  // brick slab
 	drawPartialBlockImage(img, getRect(282), tiles, 54, 54, 54, B, 0.5, 0, 0);  // stone brick slab
 
-	drawStairsE(img, getRect(284), tiles, 54, B); // stone brick stairs asc E
-	drawStairsW(img, getRect(285), tiles, 54, B);  // stone brick stairs asc W
-	drawStairsN(img, getRect(286), tiles, 54, B);  // stone brick stairs asc N
-	drawStairsS(img, getRect(287), tiles, 54, B);  // stone brick stairs asc S
+	drawStairsE(img, getRect(287), tiles, 54, B); // stone brick stairs asc E
+	drawStairsW(img, getRect(286), tiles, 54, B);  // stone brick stairs asc W
+	drawStairsN(img, getRect(285), tiles, 54, B);  // stone brick stairs asc N
+	drawStairsS(img, getRect(284), tiles, 54, B);  // stone brick stairs asc S
 
-	drawStairsE(img, getRect(288), tiles, 7, B);  // brick stairs asc E
-	drawStairsW(img, getRect(289), tiles, 7, B);  // brick stairs asc W
-	drawStairsN(img, getRect(290), tiles, 7, B);  // brick stairs asc N
-	drawStairsS(img, getRect(291), tiles, 7, B);  // brick stairs asc S
+	drawStairsE(img, getRect(291), tiles, 7, B);  // brick stairs asc E
+	drawStairsW(img, getRect(290), tiles, 7, B);  // brick stairs asc W
+	drawStairsN(img, getRect(289), tiles, 7, B);  // brick stairs asc N
+	drawStairsS(img, getRect(288), tiles, 7, B);  // brick stairs asc S
 
 // glass panes
 	drawSingleFaceBlockImage(img, getRect(293), tiles, 49, 2, B);  // vine facing E
