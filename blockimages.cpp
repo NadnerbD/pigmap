@@ -1814,8 +1814,8 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawBlockImage(img, getRect(327), tiles, 54, 54, 54, B);  // hidden silverfish - stone brick
 
 	drawBlockImage(img, getRect(281), tiles, 54, 54, 54, B);  // stone brick
-	drawBlockImage(img, getRect(323), tiles, 100, 54, 54, B);  // mossy stone brick
-	drawBlockImage(img, getRect(324), tiles, 101, 54, 54, B);  // cracked stone brick
+	drawBlockImage(img, getRect(323), tiles, 100, 100, 100, B);  // mossy stone brick
+	drawBlockImage(img, getRect(324), tiles, 101, 101, 101, B);  // cracked stone brick
 
 	drawBlockImage(img, getRect(292), tiles, 136, 136, 137, B);  // melon block
 
