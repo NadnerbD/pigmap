@@ -1372,6 +1372,43 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(109, 1)] = 285;
 	blockOffsets[offsetIdx(109, 2)] = 286;
 	blockOffsets[offsetIdx(109, 3)] = 287;
+	
+	
+	setOffsetsForID(112, 328, *this); // nether brick
+	
+	// nether brick stairs
+	setOffsetsForID(114, 329, *this);
+	blockOffsets[offsetIdx(114, 1)] = 330;
+	blockOffsets[offsetIdx(114, 2)] = 331;
+	blockOffsets[offsetIdx(114, 3)] = 332;
+	
+	
+	setOffsetsForID(113, 333, *this);  // nether brick fence post
+	setOffsetsForID(110, 349, *this);  // Mycelium
+	setOffsetsForID(111, 350, *this);  // lily pad
+	
+	setOffsetsForID(116, 351, *this);	// enchantment table
+	// cauldron
+  setOffsetsForID(118, 352, *this);	
+	blockOffsets[offsetIdx(118, 1)] = 352;
+	blockOffsets[offsetIdx(118, 2)] = 352;
+	blockOffsets[offsetIdx(118, 3)] = 352;
+	
+	
+	
+	setOffsetsForID(121, 353, *this); // end stone
+	
+	
+	 // brewing stand
+  setOffsetsForID(117, 354, *this);		 
+	blockOffsets[offsetIdx(117, 1)] = 354;
+	blockOffsets[offsetIdx(117, 2)] = 354;
+	blockOffsets[offsetIdx(117, 3)] = 354;
+	blockOffsets[offsetIdx(117, 4)] = 354;
+	blockOffsets[offsetIdx(117, 5)] = 354;
+	blockOffsets[offsetIdx(117, 6)] = 354;
+	blockOffsets[offsetIdx(117, 7)] = 354;
+
 
 }
 
@@ -1627,6 +1664,7 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawBlockImage(img, getRect(227), tiles, 74, 74, 74, B);  // note block
 
 
+
 	drawPartialBlockImage(img, getRect(9), tiles, 205, 205, 205, B, 0.125, 0, 0);  // water level 7
 	drawPartialBlockImage(img, getRect(10), tiles, 205, 205, 205, B, 0.25, 0, 0);  // water level 6
 	drawPartialBlockImage(img, getRect(11), tiles, 205, 205, 205, B, 0.375, 0, 0);  // water level 5
@@ -1854,6 +1892,48 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawSingleFaceBlockImage(img, getRect(312), tiles, 143, 3, B);  // vine facing W
 	drawSingleFaceBlockImage(img, getRect(313), tiles, 143, 0, B);  // vine facing N
 	drawSingleFaceBlockImage(img, getRect(314), tiles, 143, 1, B);  // vine facing S
+
+
+  
+  drawBlockImage(img, getRect(328), tiles, 224, 224, 224, B);  // nether brick
+  
+  drawStairsE(img, getRect(329), tiles, 224, B);  // nether brick stairs asc E
+	drawStairsW(img, getRect(330), tiles, 224, B);  // nether brick stairs asc W
+	drawStairsN(img, getRect(331), tiles, 224, B);  // nether brick stairs asc N
+	drawStairsS(img, getRect(332), tiles, 224, B);  // nether brick stairs asc S
+
+  drawFencePost(img, getRect(333), tiles, 224, B);  // nether brick fence post
+	drawFence(img, getRect(334), tiles, 224, true, false, false, false, B);  // nether brick fence N
+	drawFence(img, getRect(335), tiles, 224, false, true, false, false, B);  // nether brick fence S
+	drawFence(img, getRect(336), tiles, 224, true, true, false, false, B);  // nether brick fence NS
+	drawFence(img, getRect(337), tiles, 224, false, false, true, false, B);  // nether brick fence E
+	drawFence(img, getRect(338), tiles, 224, true, false, true, false, B);  // nether brick fence NE
+	drawFence(img, getRect(339), tiles, 224, false, true, true, false, B);  // nether brick fence SE
+	drawFence(img, getRect(340), tiles, 224, true, true, true, false, B);  // nether brick fence NSE
+	drawFence(img, getRect(341), tiles, 224, false, false, false, true, B);  // nether brick fence W
+	drawFence(img, getRect(342), tiles, 224, true, false, false, true, B);  // nether brick fence NW
+	drawFence(img, getRect(343), tiles, 224, false, true, false, true, B);  // nether brick fence SW
+	drawFence(img, getRect(344), tiles, 224, true, true, false, true, B);  // nether brick fence NSW
+	drawFence(img, getRect(345), tiles, 224, false, false, true, true, B);  // nether brick fence EW
+	drawFence(img, getRect(346), tiles, 224, true, false, true, true, B);  // nether brick fence NEW
+	drawFence(img, getRect(347), tiles, 224, false, true, true, true, B);  // nether brick fence SEW
+	drawFence(img, getRect(348), tiles, 224, true, true, true, true, B);  // nether brick fence NSEW
+	
+	drawBlockImage(img, getRect(349), tiles, 77, 77, 78, B);  // mycelium
+	drawFloorBlockImage(img, getRect(350), tiles, 76, 0, B);  // lily pad
+	drawPartialBlockImage(img, getRect(351), tiles, 182, 182, 166, B, 0.25, 0, 0); // enchantment table
+	
+// cauldron
+	drawBlockImage(img, getRect(352), tiles, 154, 154, 138, B);
+
+
+
+	drawBlockImage(img, getRect(353), tiles, 175, 175, 175, B); // end stone
+
+  // brewing stand
+	drawItemBlockImage(img, getRect(354), tiles, 157, B);
+
+
 
 /*
 // Rewrite these to use drawStem()
