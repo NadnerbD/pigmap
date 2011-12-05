@@ -246,6 +246,17 @@ void checkSpecial(SceneGraphNode& node, uint8_t blockID, uint8_t blockData, cons
 		if (bits != 0)
 			node.bimgoffset = 157 + bits;
 	}
+	else if (blockID == 113)  // nether brick fence
+	{
+		uint8_t blockIDN, blockDataN, blockIDE, blockDataE, blockIDS, blockDataS, blockIDW, blockDataW;
+		GETNEIGHBOR(blockIDN, blockDataN, BlockIdx(-1,0,0))
+		GETNEIGHBOR(blockIDS, blockDataS, BlockIdx(1,0,0))
+		GETNEIGHBOR(blockIDE, blockDataE, BlockIdx(0,-1,0))
+		GETNEIGHBOR(blockIDW, blockDataW, BlockIdx(0,1,0))
+		int bits = (blockIDN == 113 ? 0x1 : 0) | (blockIDS == 113 ? 0x2 : 0) | (blockIDE == 113 ? 0x4 : 0) | (blockIDW == 113 ? 0x8 : 0);
+		if (bits != 0)
+			node.bimgoffset = 333 + bits;
+	}
 	else if (blockID == 54)  // chest
 	{
 		uint8_t blockIDN, blockDataN, blockIDE, blockDataE, blockIDS, blockDataS, blockIDW, blockDataW;
