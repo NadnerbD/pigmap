@@ -114,7 +114,7 @@ struct BlockImages
 	bool construct(int B, const std::string& terrainfile, const std::string& firefile);
 };
 
-#define NUMBLOCKIMAGES 327
+#define NUMBLOCKIMAGES 355
 
 // block image offsets:
 //
@@ -261,6 +261,41 @@ struct BlockImages
 // 325 hidden silverfish - stone
 // 326 hidden silverfish - cobblestone
 // 327 hidden silverfish - stone brick
+
+// 328 nether brick
+
+// 329 nether brick stairs asc E
+// 330 nether brick stairs asc W
+// 331 nether brick stairs asc N
+// 332 nether brick stairs asc S
+
+// 333 nether brick fence post
+
+// 334 nether brick fence N
+// 335 nether brick fence S
+// 336 nether brick fence NS  
+// 337 nether brick fence E
+// 338 nether brick fence NE   
+// 339 nether brick fence SE   
+// 340 nether brick fence NSE      
+// 341 nether brick fence W      
+// 342 nether brick fence NW    
+// 343 nether brick fence SW       
+// 344 nether brick fence NSW        
+// 345 nether brick fence EW        
+// 346 nether brick fence NEW         
+// 347 nether brick fence SEW         
+// 348 nether brick fence NSEW
+
+// 349 Mycelium
+// 350 lily pad 
+
+// 351 enchantment table
+
+// 352 cauldron
+
+// 353 end stone
+// 354 brewing stand
 
 
 
