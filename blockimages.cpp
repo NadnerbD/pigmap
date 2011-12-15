@@ -1047,6 +1047,10 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(28, 4)] = 268;
 	blockOffsets[offsetIdx(28, 5)] = 269;
 	setOffsetsForID(30, 272, *this);
+	setOffsetsForID(31, 273, *this);
+	blockOffsets[offsetIdx(31, 0)] = 275;
+	blockOffsets[offsetIdx(31, 2)] = 274;
+	setOffsetsForID(32, 275, *this);
 	blockOffsets[offsetIdx(35, 0)] = 29;
 	blockOffsets[offsetIdx(35, 1)] = 204;
 	blockOffsets[offsetIdx(35, 2)] = 205;
@@ -1069,14 +1073,18 @@ void BlockImages::setOffsets()
 	setOffsetsForID(40, 33, *this);
 	setOffsetsForID(41, 34, *this);
 	setOffsetsForID(42, 35, *this);
-	setOffsetsForID(43, 36, *this);
+	setOffsetsForID(43, 36, *this); // Double slabs
 	blockOffsets[offsetIdx(43, 1)] = 226;
 	blockOffsets[offsetIdx(43, 2)] = 5;
 	blockOffsets[offsetIdx(43, 3)] = 4;
-	setOffsetsForID(44, 37, *this);
+	blockOffsets[offsetIdx(43, 4)] = 45; // brick dslab
+	blockOffsets[offsetIdx(43, 5)] = 281; // stone brick dslab
+	setOffsetsForID(44, 37, *this); // Single slabs
 	blockOffsets[offsetIdx(44, 1)] = 229;
 	blockOffsets[offsetIdx(44, 2)] = 230;
 	blockOffsets[offsetIdx(44, 3)] = 231;
+	blockOffsets[offsetIdx(44, 4)] = 283; // brick slab
+	blockOffsets[offsetIdx(44, 5)] = 282; // stone brick slab
 	setOffsetsForID(45, 38, *this);
 	setOffsetsForID(46, 39, *this);
 	setOffsetsForID(47, 40, *this);
@@ -1262,6 +1270,75 @@ void BlockImages::setOffsets()
 	blockOffsets[offsetIdx(94, 11)] = 241;
 	blockOffsets[offsetIdx(94, 15)] = 241;
 	setOffsetsForID(95, 270, *this);
+	setOffsetsForID(96, 276, *this);
+	blockOffsets[offsetIdx(96, 4)] = 277;
+	blockOffsets[offsetIdx(96, 5)] = 278;
+	blockOffsets[offsetIdx(96, 6)] = 279;
+	blockOffsets[offsetIdx(96, 7)] = 280;
+
+	setOffsetsForID(97, 325, *this); // hidden silverfish - default is stone
+	blockOffsets[offsetIdx(97, 1)] = 326; // cobble
+	blockOffsets[offsetIdx(97, 2)] = 327; // stone brick
+
+	setOffsetsForID(98, 281, *this); // Stone brick
+	blockOffsets[offsetIdx(98, 1)] = 323; // mossy
+	blockOffsets[offsetIdx(98, 2)] = 324; // cracked
+
+// Note: the mushroom stuff only draws two types of blocks for each mushroom type: stalk and top. 
+// There are actually multiple combinations of face textures for head blocks, hence the multiple offsets.
+	setOffsetsForID(99, 310, *this); // huge brown mushroom
+	blockOffsets[offsetIdx(99, 1)] = 309;
+	blockOffsets[offsetIdx(99, 2)] = 309;
+	blockOffsets[offsetIdx(99, 3)] = 309;
+	blockOffsets[offsetIdx(99, 4)] = 309;
+	blockOffsets[offsetIdx(99, 5)] = 309;
+	blockOffsets[offsetIdx(99, 6)] = 309;
+	blockOffsets[offsetIdx(99, 7)] = 309;
+	blockOffsets[offsetIdx(99, 8)] = 309;
+	blockOffsets[offsetIdx(99, 9)] = 309;
+	blockOffsets[offsetIdx(99, 10)] = 310;
+
+	setOffsetsForID(100, 308, *this); // huge red mushroom
+	blockOffsets[offsetIdx(100, 1)] = 307;
+	blockOffsets[offsetIdx(100, 2)] = 307;
+	blockOffsets[offsetIdx(100, 3)] = 307;
+	blockOffsets[offsetIdx(100, 4)] = 307;
+	blockOffsets[offsetIdx(100, 5)] = 307;
+	blockOffsets[offsetIdx(100, 6)] = 307;
+	blockOffsets[offsetIdx(100, 7)] = 307;
+	blockOffsets[offsetIdx(100, 8)] = 307;
+	blockOffsets[offsetIdx(100, 9)] = 307;
+	blockOffsets[offsetIdx(100, 10)] = 308;
+
+	setOffsetsForID(101, 319, *this); // iron bars
+	blockOffsets[offsetIdx(102, 3)] = 320;
+	blockOffsets[offsetIdx(102, 4)] = 321;
+	blockOffsets[offsetIdx(102, 5)] = 322;
+	setOffsetsForID(102, 293, *this); // glass pane
+	blockOffsets[offsetIdx(102, 3)] = 294;
+	blockOffsets[offsetIdx(102, 4)] = 295;
+	blockOffsets[offsetIdx(102, 5)] = 296;
+	setOffsetsForID(103, 292, *this); // melon
+//	setOffsetsForID(104, 285, *this); // pumpkin stem
+//	setOffsetsForID(105, 285, *this); // melon stem
+	setOffsetsForID(106, 311, *this); // vines
+	blockOffsets[offsetIdx(106, 1)] = 311;
+	blockOffsets[offsetIdx(106, 2)] = 312;
+	blockOffsets[offsetIdx(106, 4)] = 313;
+	blockOffsets[offsetIdx(106, 8)] = 314;
+	setOffsetsForID(107, 315, *this); // fence gate
+	blockOffsets[offsetIdx(107, 1)] = 316;
+	blockOffsets[offsetIdx(107, 2)] = 317;
+	blockOffsets[offsetIdx(107, 3)] = 318;
+	setOffsetsForID(108, 288, *this); // brick stairs
+	blockOffsets[offsetIdx(108, 1)] = 289;
+	blockOffsets[offsetIdx(108, 2)] = 290;
+	blockOffsets[offsetIdx(108, 3)] = 291;
+	setOffsetsForID(109, 284, *this); // stone brick stairs
+	blockOffsets[offsetIdx(109, 1)] = 285;
+	blockOffsets[offsetIdx(109, 2)] = 286;
+	blockOffsets[offsetIdx(109, 3)] = 287;
+
 }
 
 void BlockImages::checkOpacityAndTransparency(int B)
@@ -1381,6 +1458,8 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 
 	// colorize various tiles
 	darken(tiles, ImageRect(0, 0, 2*B, 2*B), 0.6, 0.95, 0.3);  // tile 0 = grass top
+	darken(tiles, ImageRect(14*B, 4*B, 2*B, 2*B), 0.6, 0.95, 0.3);  // tile 39 = tall grass
+	darken(tiles, ImageRect(16*B, 6*B, 2*B, 2*B), 0.6, 0.95, 0.3);  // tile 56 = fern
 	darken(tiles, ImageRect(8*B, 20*B, 2*B, 2*B), 0.9, 0.1, 0.1);  // tile 164 = redstone dust
 
 	// create colorized copies of leaf tiles (can't colorize in place because normal and
@@ -1513,6 +1592,7 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawBlockImage(img, getRect(226), tiles, 192, 192, 176, B);  // sandstone
 	drawBlockImage(img, getRect(227), tiles, 74, 74, 74, B);  // note block
 
+
 	drawPartialBlockImage(img, getRect(9), tiles, 205, 205, 205, B, 0.125, 0, 0);  // water level 7
 	drawPartialBlockImage(img, getRect(10), tiles, 205, 205, 205, B, 0.25, 0, 0);  // water level 6
 	drawPartialBlockImage(img, getRect(11), tiles, 205, 205, 205, B, 0.375, 0, 0);  // water level 5
@@ -1527,6 +1607,7 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawPartialBlockImage(img, getRect(229), tiles, 192, 192, 176, B, 0.5, 0, 0);  // sandstone slab
 	drawPartialBlockImage(img, getRect(230), tiles, 4, 4, 4, B, 0.5, 0, 0);  // wooden slab
 	drawPartialBlockImage(img, getRect(231), tiles, 16, 16, 16, B, 0.5, 0, 0);  // cobble slab
+
 	drawPartialBlockImage(img, getRect(110), tiles, 1, 1, 1, B, 0.875, 0, 0);  // stone pressure plate
 	drawPartialBlockImage(img, getRect(119), tiles, 4, 4, 4, B, 0.875, 0, 0);  // wood pressure plate
 	drawPartialBlockImage(img, getRect(127), tiles, 66, 66, 66, B, 0.75, 0, 0);  // snow
@@ -1560,6 +1641,9 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawItemBlockImage(img, getRect(250), tiles, 63, B);  // pine sapling
 	drawItemBlockImage(img, getRect(251), tiles, 79, B);  // birch sapling
 	drawItemBlockImage(img, getRect(272), tiles, 11, B);  // web
+	drawItemBlockImage(img, getRect(273), tiles, 39, B);  // tall grass
+	drawItemBlockImage(img, getRect(274), tiles, 56, B);  // fern
+	drawItemBlockImage(img, getRect(275), tiles, 55, B);  // dead shrub
 
 	drawSingleFaceBlockImage(img, getRect(44), tiles, 80, 1, B);  // torch pointing S
 	drawSingleFaceBlockImage(img, getRect(45), tiles, 80, 0, B);  // torch pointing N
@@ -1593,6 +1677,10 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawSingleFaceBlockImage(img, getRect(146), tiles, 115, 0, B);  // red torch N off
 	drawSingleFaceBlockImage(img, getRect(147), tiles, 115, 3, B);  // red torch W off
 	drawSingleFaceBlockImage(img, getRect(148), tiles, 115, 2, B);  // red torch E off
+	drawSingleFaceBlockImage(img, getRect(277), tiles, 84, 2, B);  // trapdoor open W
+	drawSingleFaceBlockImage(img, getRect(278), tiles, 84, 3, B);  // trapdoor open E
+	drawSingleFaceBlockImage(img, getRect(279), tiles, 84, 0, B);  // trapdoor open S
+	drawSingleFaceBlockImage(img, getRect(280), tiles, 84, 1, B);  // trapdoor open N
 
 	drawPartialSingleFaceBlockImage(img, getRect(100), tiles, 4, 2, B, 0.25, 0.75, 0, 1);  // wall sign facing E
 	drawPartialSingleFaceBlockImage(img, getRect(101), tiles, 4, 3, B, 0.25, 0.75, 0, 1);  // wall sign facing W
@@ -1627,6 +1715,7 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawFloorBlockImage(img, getRect(259), tiles, 163, 0, B);  // booster off NS
 	drawFloorBlockImage(img, getRect(264), tiles, 195, 1, B);  // detector EW
 	drawFloorBlockImage(img, getRect(265), tiles, 195, 0, B);  // detector NS
+	drawFloorBlockImage(img, getRect(276), tiles, 84, 0, B);  // trapdoor closed
 
 	drawAngledFloorBlockImage(img, getRect(200), tiles, 128, 0, 0, B);  // track asc S
 	drawAngledFloorBlockImage(img, getRect(201), tiles, 128, 0, 2, B);  // track asc N
@@ -1684,6 +1773,70 @@ bool BlockImages::construct(int B, const string& terrainfile, const string& fire
 	drawRepeater(img, getRect(247), tiles, 131, 1, B);  // repeater on W
 
 	drawFire(img, getRect(189), firetile, B);  // fire
+
+
+	drawBlockImage(img, getRect(325), tiles, 1, 1, 1, B);  // hidden silverfish - stone
+	drawBlockImage(img, getRect(326), tiles, 16, 16, 16, B);  // hidden silverfish - cobble
+	drawBlockImage(img, getRect(327), tiles, 54, 54, 54, B);  // hidden silverfish - stone brick
+
+	drawBlockImage(img, getRect(281), tiles, 54, 54, 54, B);  // stone brick
+	drawBlockImage(img, getRect(323), tiles, 100, 100, 100, B);  // mossy stone brick
+	drawBlockImage(img, getRect(324), tiles, 101, 101, 101, B);  // cracked stone brick
+
+	drawBlockImage(img, getRect(292), tiles, 136, 136, 137, B);  // melon block
+
+	drawBlockImage(img, getRect(307), tiles, 125, 125, 125, B);  // big red mushroom head
+	drawBlockImage(img, getRect(308), tiles, 141, 141, 141, B);  // big red mushroom stalk
+	drawBlockImage(img, getRect(309), tiles, 126, 126, 126, B);  // big brown mushroom head
+	drawBlockImage(img, getRect(310), tiles, 142, 142, 142, B);  // big brown mushroom stalk
+
+	drawPartialBlockImage(img, getRect(283), tiles, 7, 7, 7, B, 0.5, 0, 0);  // brick slab
+	drawPartialBlockImage(img, getRect(282), tiles, 54, 54, 54, B, 0.5, 0, 0);  // stone brick slab
+
+	drawStairsE(img, getRect(287), tiles, 54, B); // stone brick stairs asc E
+	drawStairsW(img, getRect(286), tiles, 54, B);  // stone brick stairs asc W
+	drawStairsN(img, getRect(285), tiles, 54, B);  // stone brick stairs asc N
+	drawStairsS(img, getRect(284), tiles, 54, B);  // stone brick stairs asc S
+
+	drawStairsE(img, getRect(291), tiles, 7, B);  // brick stairs asc E
+	drawStairsW(img, getRect(290), tiles, 7, B);  // brick stairs asc W
+	drawStairsN(img, getRect(289), tiles, 7, B);  // brick stairs asc N
+	drawStairsS(img, getRect(288), tiles, 7, B);  // brick stairs asc S
+
+// glass panes
+	drawSingleFaceBlockImage(img, getRect(293), tiles, 49, 2, B);  // vine facing E
+	drawSingleFaceBlockImage(img, getRect(294), tiles, 49, 3, B);  // vine facing W
+	drawSingleFaceBlockImage(img, getRect(295), tiles, 49, 0, B);  // vine facing N
+	drawSingleFaceBlockImage(img, getRect(296), tiles, 49, 1, B);  // vine facing S
+
+// iron bars
+	drawSingleFaceBlockImage(img, getRect(319), tiles, 85, 2, B);  // vine facing E
+	drawSingleFaceBlockImage(img, getRect(320), tiles, 85, 3, B);  // vine facing W
+	drawSingleFaceBlockImage(img, getRect(321), tiles, 85, 0, B);  // vine facing N
+	drawSingleFaceBlockImage(img, getRect(322), tiles, 85, 1, B);  // vine facing S
+
+// vines
+	drawSingleFaceBlockImage(img, getRect(311), tiles, 143, 2, B);  // vine facing E
+	drawSingleFaceBlockImage(img, getRect(312), tiles, 143, 3, B);  // vine facing W
+	drawSingleFaceBlockImage(img, getRect(313), tiles, 143, 0, B);  // vine facing N
+	drawSingleFaceBlockImage(img, getRect(314), tiles, 143, 1, B);  // vine facing S
+
+/*
+// Rewrite these to use drawStem()
+	drawSign(img, getRect(302), tiles, 126, B);  // melon stem straight
+	drawSign(img, getRect(303), tiles, 142, B);  // melon stem pointing E
+	drawSign(img, getRect(304), tiles, 142, B);  // melon stem pointing W
+	drawSign(img, getRect(305), tiles, 142, B);  // melon stem pointing N
+	drawSign(img, getRect(306), tiles, 142, B);  // melon stem pointing S
+
+	drawSign(img, getRect(297), tiles, 126, B);  // pumpkin stem straight
+	drawSign(img, getRect(298), tiles, 142, B);  // pumpkin stem pointing E
+	drawSign(img, getRect(299), tiles, 142, B);  // pumpkin stem pointing W
+	drawSign(img, getRect(300), tiles, 142, B);  // pumpkin stem pointing N
+	drawSign(img, getRect(301), tiles, 142, B);  // pumpkin stem pointing S
+*/
+
+
 
 	return true;
 }
