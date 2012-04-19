@@ -22,6 +22,8 @@
 //   -have signs actually face correct directions
 //   -edge shadows on vertical edges, too?
 //   -proper redstone wire directions
+//   -better dragon egg
+//   -extended pistons
 // -premultiply block image alphas?
 // -dump list of corrupted chunks at end, so they can be retried later
 // -keep some space around for PNG row pointers instead of allocating every time
@@ -64,20 +66,27 @@ void printStats(int seconds, const RenderStats& stats)
 	cout << "chunk cache: " << stats.chunkcache.hits << " hits   " << stats.chunkcache.misses << " misses" << endl;
 	cout << "             " << stats.chunkcache.read << " read   " << stats.chunkcache.skipped << " skipped   " << stats.chunkcache.missing << " missing   "
 	     << stats.chunkcache.reqmissing << " reqmissing   " << stats.chunkcache.corrupt << " corrupt" << endl;
-	cout << "region requests: " << stats.region.read << " read (containing " << stats.region.chunksread << " chunks)   " << stats.region.skipped << " skipped" << endl;
-	cout << "                 " << stats.region.missing << " missing   " << stats.region.reqmissing << " reqmissing   " << stats.region.corrupt << " corrupt" << endl;
+	cout << "region cache: " << stats.regioncache.hits << " hits   " << stats.regioncache.misses << " misses" << endl;
+	cout << "              " << stats.regioncache.read << " read   " << stats.regioncache.skipped << " skipped   " << stats.regioncache.missing << " missing   "
+	     << stats.regioncache.reqmissing << " reqmissing   " << stats.regioncache.corrupt << " corrupt" << endl;
+#if USE_MALLINFO
+	cout << "heap usage: " << stats.heapusage << " bytes" << endl;
+#endif
 }
 
 void runSingleThread(RenderJob& rj)
 {
 	cout << "single thread will render " << rj.stats.reqtilecount << " base tiles" << endl;
 	// allocate storage/caches
-	rj.chunkcache.reset(new ChunkCache(*rj.chunktable, *rj.regiontable, rj.inputpath, rj.fullrender, rj.regionformat, rj.stats.chunkcache, rj.stats.region));
+	rj.regioncache.reset(new RegionCache(*rj.chunktable, *rj.regiontable, rj.inputpath, rj.fullrender, rj.stats.regioncache));
+	rj.chunkcache.reset(new ChunkCache(*rj.chunktable, *rj.regiontable, *rj.regioncache, rj.inputpath, rj.fullrender, rj.regionformat, rj.stats.chunkcache));
 	rj.tilecache.reset(new TileCache(rj.mp));
 	rj.scenegraph.reset(new SceneGraph);
 	RGBAImage topimg;
 	// render the tiles recursively (starting at the very top)
 	renderZoomTile(ZoomTileIdx(0,0,0), rj, topimg);
+	// get memory stats
+	rj.stats.heapusage = getHeapUsage();
 }
 
 struct WorkerThreadParams
@@ -197,10 +206,12 @@ void runMultithreaded(RenderJob& rj, int threads)
 		rjs[i].regiontable.reset(new RegionTable);
 		rjs[i].regiontable->copyFrom(*rj.regiontable);
 		if (!rjs[i].testmode)
-			rjs[i].chunkcache.reset(new ChunkCache(*rjs[i].chunktable, *rjs[i].regiontable, rjs[i].inputpath, rjs[i].fullrender, rjs[i].regionformat, rjs[i].stats.chunkcache, rjs[i].stats.region));
-		rjs[i].tilecache.reset(new TileCache(rjs[i].mp));
-		if (!rjs[i].testmode)
+		{
+			rjs[i].regioncache.reset(new RegionCache(*rjs[i].chunktable, *rjs[i].regiontable, rjs[i].inputpath, rjs[i].fullrender, rjs[i].stats.regioncache));
+			rjs[i].chunkcache.reset(new ChunkCache(*rjs[i].chunktable, *rjs[i].regiontable, *rjs[i].regioncache, rjs[i].inputpath, rjs[i].fullrender, rjs[i].regionformat, rjs[i].stats.chunkcache));
 			rjs[i].scenegraph.reset(new SceneGraph);
+		}
+		rjs[i].tilecache.reset(new TileCache(rjs[i].mp));
 	}
 
 	// divide the required tiles evenly among the threads: find a zoom level that has enough tiles for us
@@ -249,8 +260,9 @@ void runMultithreaded(RenderJob& rj, int threads)
 	for (int i = 0; i < threads; i++)
 	{
 		rj.stats.chunkcache += rjs[i].stats.chunkcache;
-		rj.stats.region += rjs[i].stats.region;
+		rj.stats.regioncache += rjs[i].stats.regioncache;
 	}
+	rj.stats.heapusage = getHeapUsage();
 
 	// copy the drawn flags over from the thread TileTables (for the double-check)
 	for (RequiredTileIterator it(*rj.tiletable); !it.end; it.advance())
@@ -373,13 +385,19 @@ void writeHTML(const RenderJob& rj, const string& htmlpath)
 	ifstream infile(templatePath.c_str());
 	infile.get(strbuf, 0);  // get entire file (unless it happens to have a '\0' in it)
 	if (infile.fail())
+	{
+		cerr << "couldn't find template.html" << endl;
 		return;
+	}
 	string templateText = strbuf.str();
 	if (!replace(templateText, "{tileSize}", tostring(rj.mp.tileSize())) ||
 	    !replace(templateText, "{B}", tostring(rj.mp.B)) ||
 	    !replace(templateText, "{T}", tostring(rj.mp.T)) ||
 	    !replace(templateText, "{baseZoom}", tostring(rj.mp.baseZoom)))
+	{
+		cerr << "template.html is corrupt" << endl;
 		return;
+	}
 	string htmlOutPath = rj.outputpath + "/pigmap-default.html";
 	ofstream outfile(htmlOutPath.c_str());
 	outfile << templateText;
@@ -412,6 +430,7 @@ bool performRender(const string& inputpath, const string& outputpath, const stri
 		cout << "region-format world detected" << endl;
 	else
 		cout << "no regions detected; assuming chunk-format world" << endl;
+
 	// test world
 	if (testworldsize != -1)
 	{
@@ -759,6 +778,21 @@ void testReqTileCount(const string& inputpath)
 	}
 }
 
+void testResize()
+{
+	int sourceSize = 16;
+	for (int B = 2; B <= 16; B++)
+	{
+		int destSize = 2*B;
+		cout << "====== B: " << B << "   destSize: " << destSize << "    sourceSize: " << sourceSize << " ======" << endl;
+		for (int i = 0; i < destSize; i++)
+		{
+			int j = interpolate(i, destSize, sourceSize);
+			cout << i << " --> " << j << endl;
+		}
+	}
+}
+
 //-------------------------------------------------------------------------------------------------------------------
 
 bool validateParamsFull(const string& inputpath, const string& outputpath, const string& imgpath, const MapParams& mp, int threads, const string& chunklist, const string& regionlist, bool expand, const string& htmlpath)
@@ -782,6 +816,13 @@ bool validateParamsFull(const string& inputpath, const string& outputpath, const
 	if (!mp.validZoom() && mp.baseZoom != -1)
 	{
 		cerr << "-Z must be in range 0-30, or may be omitted to set automatically" << endl;
+		return false;
+	}
+
+	// MINY/MAXY must describe a valid range
+	if (!mp.validYRange())
+	{
+		cerr << "-y and -Y, if used, must be in range 0-255, and -y must be <= -Y" << endl;
 		return false;
 	}
 
@@ -816,10 +857,10 @@ bool validateParamsFull(const string& inputpath, const string& outputpath, const
 // also sets MapParams to values from existing map
 bool validateParamsIncremental(const string& inputpath, const string& outputpath, const string& imgpath, MapParams& mp, int threads, const string& chunklist, const string& regionlist, bool expand, const string& htmlpath)
 {
-	// -B, -T, -Z are not allowed
-	if (mp.B != -1 || mp.T != -1 || mp.baseZoom != -1)
+	// -B, -T, -Z, -y, -Y are not allowed
+	if (mp.B != -1 || mp.T != -1 || mp.baseZoom != -1 || mp.userMinY || mp.userMaxY)
 	{
-		cerr << "-B, -T, -Z not allowed for incremental updates" << endl;
+		cerr << "-B, -T, -Z, -y, -Y not allowed for incremental updates" << endl;
 		return false;
 	}
 
@@ -895,6 +936,13 @@ bool validateParamsTest(const string& inputpath, const string& outputpath, const
 		cerr << "-Z must be in range 0-30, or may be omitted to set automatically" << endl;
 		return false;
 	}
+	
+	// MINY/MAXY must describe a valid range
+	if (!mp.validYRange())
+	{
+		cerr << "-y and -Y, if used, must be in range 0-255, and -y must be <= -Y" << endl;
+		return false;
+	}
 
 	// must have a sensible number of threads (upper limit is arbitrary, but you'd need a truly
 	//  insanely large map to see any benefit to having that many...)
@@ -935,6 +983,7 @@ int main(int argc, char **argv)
 	//testZOrder();
 	//testTileIdxs();
 	//testReqTileCount(inputpath);
+	//testResize();
 
 	string inputpath, outputpath, imgpath = ".", chunklist, regionlist, htmlpath = ".";
 	MapParams mp(-1,-1,-1);
@@ -943,7 +992,7 @@ int main(int argc, char **argv)
 	bool expand = false;
 
 	int c;
-	while ((c = getopt(argc, argv, "i:o:g:c:B:T:Z:h:w:xm:r:")) != -1)
+	while ((c = getopt(argc, argv, "i:o:g:c:B:T:Z:h:w:xm:r:y:Y:")) != -1)
 	{
 		switch (c)
 		{
@@ -970,6 +1019,14 @@ int main(int argc, char **argv)
 				break;
 			case 'Z':
 				mp.baseZoom = atoi(optarg);
+				break;
+			case 'y':
+				mp.minY = atoi(optarg);
+				mp.userMinY = true;
+				break;
+			case 'Y':
+				mp.maxY = atoi(optarg);
+				mp.userMaxY = true;
 				break;
 			case 'h':
 				threads = atoi(optarg);

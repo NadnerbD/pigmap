@@ -29,6 +29,9 @@ void makePath(const std::string& path);
 void renameFile(const std::string& oldpath, const std::string& newpath);
 void copyFile(const std::string& oldpath, const std::string& newpath);
 
+// read a text file and append each of its non-empty lines to a vector
+bool readLines(const std::string& filename, std::vector<std::string>& lines);
+
 // list names of entries in a directory, not including "." and ".."
 // ...returns relative paths beginning with dirpath; appends results to vector
 void listEntries(const std::string& dirpath, std::vector<std::string>& entries);
@@ -45,8 +48,14 @@ int readGzFile(const std::string& filename, std::vector<uint8_t>& data);
 bool readGzOrZlib(uint8_t* inbuf, size_t size, std::vector<uint8_t>& data);
 
 
+#define USE_MALLINFO 0
+
+uint64_t getHeapUsage();
+
+
 // convert a big-endian int into whatever the current platform endianness is
 uint32_t fromBigEndian(uint32_t i);
+uint16_t fromBigEndian(uint16_t i);
 
 // detect whether the platform is big-endian
 bool isBigEndian();
@@ -63,6 +72,9 @@ int64_t ceildiv(int64_t a, int64_t b);
 // positive remainder mod 64, for chunk subdirectories
 int64_t mod64pos(int64_t a);
 
+// given i in [0,destrange), find j in [0,srcrange)
+int64_t interpolate(int64_t i, int64_t destrange, int64_t srcrange);
+
 
 // take a row-major index into a SIZExSIZE array and convert it to Z-order
 uint32_t toZOrder(uint32_t i, const uint32_t SIZE);
@@ -77,10 +89,13 @@ std::string toBase36(int64_t i);
 std::string tostring(int i);
 std::string tostring(int64_t i);
 bool fromstring(const std::string& s, int64_t& result);
+bool fromstring(const std::string& s, int& result);
 
 
 // replace all occurrences of oldstr in text with newstr; return false if none found
 bool replace(std::string& text, const std::string& oldstr, const std::string& newstr);
+
+std::vector<std::string> tokenize(const std::string& instr, char separator);
 
 
 // find an assignment of costs to threads that attempts to minimize the difference
@@ -105,6 +120,14 @@ template <class T> struct arrayDeleter
 	T *array;
 	arrayDeleter(T *a) : array(a) {}
 	~arrayDeleter() {delete[] array;}
+};
+
+
+template <class T> struct stackPusher
+{
+	std::vector<T>& vec;
+	stackPusher(std::vector<T>& v, const T& item) : vec(v) {vec.push_back(item);}
+	~stackPusher() {vec.pop_back();}
 };
 
 

@@ -36,6 +36,12 @@ struct ChunkOffset
 	}
 };
 
+struct string84
+{
+	std::string s;
+	explicit string84(const std::string& sss) : s(sss) {}
+};
+
 struct RegionFileReader
 {
 	// region file is broken into 4096-byte sectors; first sector is the header that holds the
@@ -44,16 +50,26 @@ struct RegionFileReader
 	// chunk offsets are big-endian; lower (that is, 4th) byte is size in sectors, upper 3 bytes are
 	//  sector offset *in region file* (one more than the offset into chunkdata)
 	// offsets are indexed by Z*32 + X
-	uint32_t offsets[32 * 32];
+	std::vector<uint32_t> offsets;
 	// each set of chunk data contains:
 	//  -a 4-byte big-endian data length (not including the length field itself)
 	//  -a single-byte version: 1 for gzip, 2 for zlib (this byte *is* included in the length)
 	//  -length - 1 bytes of actual compressed data
 	std::vector<uint8_t> chunkdata;
+	// whether this data was read from an Anvil region file or an old-style one
+	bool anvil;
 
 	RegionFileReader()
 	{
-		chunkdata.reserve(4194304);
+		offsets.resize(32 * 32);
+		chunkdata.reserve(8388608);
+	}
+	
+	void swap(RegionFileReader& rfr)
+	{
+		offsets.swap(rfr.offsets);
+		chunkdata.swap(rfr.chunkdata);
+		std::swap(anvil, rfr.anvil);
 	}
 
 	// extract values from the offsets
@@ -65,7 +81,8 @@ struct RegionFileReader
 
 	// attempt to read a region file; return 0 for success, -1 for file not found, -2 for
 	//  other errors
-	int loadFromFile(const std::string& filename);
+	// looks for an Anvil region file (.mca) first, then an old-style one (.mcr)
+	int loadFromFile(const RegionIdx& ri, const std::string& inputpath);
 
 	// attempt to decompress a chunk into a buffer; return 0 for success, -1 for missing chunk,
 	//  -2 for other errors
@@ -74,13 +91,13 @@ struct RegionFileReader
 
 	// attempt to read only the header (i.e. the chunk offsets) from a region file; return 0
 	//  for success, -1 for file not found, -2 for other errors
-	int loadHeaderOnly(const std::string& filename);
+	// looks for an Anvil region file (.mca) first, then an old-style one (.mcr)
+	int loadHeaderOnly(const RegionIdx& ri, const std::string& inputpath);
 
 	// open a region file, load only its header, and return a list of chunks it contains (i.e. the ones that
 	//  actually currently exist)
-	// (RegionIdx is needed to compute the ChunkIdxs)
-	// ...returns false if region file can't be read
-	bool getContainedChunks(const RegionIdx& ri, const std::string& filename, std::vector<ChunkIdx>& chunks);
+	// ...returns 0 for success, -1 for file not found, -2 for other errors
+	int getContainedChunks(const RegionIdx& ri, const string84& inputpath, std::vector<ChunkIdx>& chunks);
 };
 
 // iterates over the chunks in a region
@@ -96,6 +113,66 @@ struct RegionChunkIterator
 
 	// move to the next chunk, or to the end
 	void advance();
+};
+
+
+struct RegionCacheStats
+{
+	int64_t hits, misses;
+	// types of misses:
+	int64_t read;  // successfully read from disk
+	int64_t skipped;  // assumed not to exist because not required in a full render
+	int64_t missing;  // non-required region not present on disk
+	int64_t reqmissing;  // required region not present on disk
+	int64_t corrupt;  // found on disk, but failed to read
+
+	RegionCacheStats() : hits(0), misses(0), read(0), skipped(0), missing(0), reqmissing(0), corrupt(0) {}
+
+	RegionCacheStats& operator+=(const RegionCacheStats& rs);
+};
+
+struct RegionCacheEntry
+{
+	PosRegionIdx ri;  // or [-1, -1] if this entry is empty
+	RegionFileReader regionfile;
+	
+	RegionCacheEntry() : ri(-1,-1) {}
+};
+
+#define RCACHEBITSX 1
+#define RCACHEBITSZ 1
+#define RCACHEXSIZE (1 << RCACHEBITSX)
+#define RCACHEZSIZE (1 << RCACHEBITSZ)
+#define RCACHESIZE (RCACHEXSIZE * RCACHEZSIZE)
+#define RCACHEXMASK (RCACHEXSIZE - 1)
+#define RCACHEZMASK (RCACHEZSIZE - 1)
+
+struct RegionCache : private nocopy
+{
+	RegionCacheEntry entries[RCACHESIZE];
+
+	ChunkTable& chunktable;
+	RegionTable& regiontable;
+	RegionCacheStats& stats;
+	std::string inputpath;
+	bool fullrender;
+	// readbuf is an extra less-important cache entry--when a new region is read, it's this entry which will be trashed
+	//  and its storage used for the read (which might fail), but if the read succeeds, the new region is swapped
+	//  into its proper place in the cache, and the previous tenant there moves here
+	RegionCacheEntry readbuf;
+	RegionCache(ChunkTable& ctable, RegionTable& rtable, const std::string& inpath, bool fullr, RegionCacheStats& st)
+		: chunktable(ctable), regiontable(rtable), inputpath(inpath), fullrender(fullr), stats(st)
+	{
+	}
+
+	// attempt to decompress a chunk into a buffer; return 0 for success, -1 for missing chunk,
+	//  -2 for other errors
+	// (this is not const only because zlib won't take const pointers for input)
+	int getDecompressedChunk(const PosChunkIdx& ci, std::vector<uint8_t>& buf, bool& anvil);
+
+	static int getEntryNum(const PosRegionIdx& ri) {return (ri.x & RCACHEXMASK) * RCACHEZSIZE + (ri.z & RCACHEZMASK);}
+
+	void readRegionFile(const PosRegionIdx& ri);
 };
 
 

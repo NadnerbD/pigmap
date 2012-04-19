@@ -27,6 +27,10 @@
 
 #include "utils.h"
 
+#if USE_MALLINFO
+#include <malloc.h>
+#endif
+
 using namespace std;
 
 
@@ -59,6 +63,17 @@ void copyFile(const string& oldpath, const string& newpath)
 	outfile << infile.rdbuf();
 }
 
+bool readLines(const string& filename, vector<string>& lines)
+{
+	ifstream infile(filename.c_str());
+	if (infile.fail())
+		return false;
+	string line;
+	while (!getline(infile, line).eof())
+		lines.push_back(line);
+	return true;
+}
+
 
 void listEntries(const string& dirpath, vector<string>& entries)
 {
@@ -83,6 +98,16 @@ bool dirExists(const string& dirpath)
 		return false;
 	closedir(dir);
 	return true;
+}
+
+uint64_t getHeapUsage()
+{
+#if USE_MALLINFO
+	struct mallinfo minfo = mallinfo();
+	return minfo.uordblks + minfo.hblkhd;
+#else
+	return 0;
+#endif
 }
 
 
@@ -192,6 +217,12 @@ uint32_t fromBigEndian(uint32_t i)
 	return (*b << 24) | (*(b+1) << 16) | (*(b+2) << 8) | (*(b+3));
 }
 
+uint16_t fromBigEndian(uint16_t i)
+{
+	uint8_t *b = (uint8_t*)(&i);
+	return (*b << 8) | (*(b+1));
+}
+
 bool isBigEndian()
 {
 	uint32_t i = 0xff000000;
@@ -238,6 +269,14 @@ int64_t mod64pos(int64_t a)
 		return a % 64;
 	int64_t m = a % 64;
 	return (m == 0) ? 0 : (64 + m);
+}
+
+int64_t interpolate(int64_t i, int64_t destrange, int64_t srcrange)
+{
+	double f = (double)i / (double)(destrange - 1);
+	f = f * (double)(srcrange - 1);
+	int64_t j = (int64_t)f;
+	return (f - (double)j >= 0.5) ? j+1 : j;
 }
 
 
@@ -373,6 +412,13 @@ bool fromstring(const string& s, int64_t& result)
 	return !ss.fail();
 }
 
+bool fromstring(const string& s, int& result)
+{
+	istringstream ss(s);
+	ss >> result;
+	return !ss.fail();
+}
+
 bool replace(string& text, const string& oldstr, const string& newstr)
 {
 	string::size_type pos = text.find(oldstr);
@@ -384,6 +430,16 @@ bool replace(string& text, const string& oldstr, const string& newstr)
 		pos = text.find(oldstr, pos + 1);
 	}
 	return true;
+}
+
+vector<string> tokenize(const string& instr, char separator)
+{
+	vector<string> tokens;
+	istringstream stream(instr);
+	string token;
+	while (getline(stream, token, separator))
+		tokens.push_back(token);
+	return tokens;
 }
 
 
